@@ -8,15 +8,18 @@ export const ErrorNotification: React.FC<Props> = ({ hidden }) => {
   const [hide, setHide] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => {
+    if (hidden) {
       setHide(false);
-    }, 3000);
+      setTimeout(() => {
+        setHide(true);
+      }, 3000);
+    }
   }, [hidden]);
 
   return (
     <div
       data-cy="ErrorNotification"
-      className={`notification is-danger is-light has-text-weight-normal ${hide ? '' : 'hidden'}`}
+      className={`notification is-danger is-light has-text-weight-normal ${hide ? 'hidden' : ''}`}
     >
       <button data-cy="HideErrorButton" type="button" className="delete" />
       {/* show only one message at a time */}
