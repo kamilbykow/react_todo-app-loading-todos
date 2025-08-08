@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { UserWarning } from './UserWarning';
 import { getTodos, USER_ID } from './api/todos';
 import { Header } from './components/Header/Header';
@@ -23,19 +23,22 @@ export const App: React.FC = () => {
     setFilter(name);
   };
 
-  if (todos) {
-    switch (filter) {
-      case 'Completed':
-        filteredTodos = filteredTodos?.filter(todo => todo.completed);
-        break;
-      case 'Active':
-        filteredTodos = filteredTodos?.filter(todo => !todo.completed);
-        break;
-      case 'All':
-        filteredTodos = todos;
-        break;
+  filteredTodos = useMemo(() => {
+    if (todos) {
+      switch (filter) {
+        case 'Completed':
+          return filteredTodos?.filter(todo => todo.completed);
+
+        case 'Active':
+          return filteredTodos?.filter(todo => !todo.completed);
+
+        case 'All':
+          return todos;
+      }
     }
-  }
+
+    return undefined;
+  }, [todos, filteredTodos, filter]);
 
   if (!USER_ID) {
     return <UserWarning />;
